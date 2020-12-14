@@ -1,4 +1,4 @@
 {
 	"image": "node:lts-slim",
-	"postCreateCommand": "bash scripts/setup.sh",
+	"postCreateCommand": "bash .devcontainer/scripts/setup.sh",
 }
