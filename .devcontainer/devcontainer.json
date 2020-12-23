@@ -3,5 +3,8 @@
 	"postCreateCommand": "bash .devcontainer/scripts/setup.sh",
 	"containerEnv": {
 		"SHELL": "/usr/bin/zsh",
-	}
+	},
+	"extensions": [
+		"esbenp.prettier-vscode"
+	]
 }
