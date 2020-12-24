@@ -1,6 +1,7 @@
 require("dotenv").config();
 const Discord = require("discord.js");
 const config = require("./config");
+const scrimmages = require("./services");
 
 const client = new Discord.Client();
 
@@ -12,7 +13,10 @@ client.on("message", (msg) => {
     if (msg.channel.id != config.channel_id) return;
     if (msg.content != "show") return;
 
-    msg.reply("Here is the schedule:");
+    scrimmages
+        .fetch()
+        .then((scrimmages) => msg.reply("```" + scrimmages + "```"))
+        .catch((error) => msg.reply("An error occured"));
 });
 
 client.login(config.discord_token);
