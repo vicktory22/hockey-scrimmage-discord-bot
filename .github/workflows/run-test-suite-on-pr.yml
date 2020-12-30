@@ -1,10 +1,10 @@
 name: run-test-suite-on-pr
-on: [pull-request]
+on: [pull_request]
 jobs:
     run-test-suite:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v2
-            - uses: actions/node@v1
+            - uses: actions/setup-node@v1
             - run: npm install
             - run: npm run test
