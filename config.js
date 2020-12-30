@@ -1,5 +1,5 @@
 module.exports = {
     discord_token: process.env.DISCORD_TOKEN,
     channel_id: process.env.CHANNEL_ID,
-    site_url: process.env.SITE_URL,
+    url: process.env.SITE_URL,
 };
