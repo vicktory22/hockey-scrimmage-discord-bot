@@ -1,5 +1,5 @@
 name: run-test-suite-on-pr
-on: [pull-request]
+on: [pull_request]
 jobs:
     run-test-suite:
         runs-on: ubuntu-latest
