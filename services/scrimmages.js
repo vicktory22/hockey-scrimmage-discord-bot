@@ -1,4 +1,5 @@
 const axios = require("axios");
+const columnify = require("columnify");
 const fp = require("lodash/fp");
 const config = require("../config");
 const { parseElements, scrimmageDetails } = require("./parser");
@@ -14,7 +15,11 @@ const fetch = async () => {
 
     if (status !== 200) handleUnsuccessful();
 
-    return fp.pipe(parseScrimmageRows, extractScrimmageDetails)(data);
+    return fp.pipe(
+        parseScrimmageRows,
+        extractScrimmageDetails,
+        columnify
+    )(data);
 };
 
 const parseScrimmageRows = (html) =>
