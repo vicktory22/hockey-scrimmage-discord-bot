@@ -41,11 +41,6 @@ const scrimmageDetails = (html) => {
 };
 
 const parseColumns = (columns) => {
-    const parseStatusColumn = (index) => {
-        const slotsColumn = cheerio(columns[index]).find("p.SUGbigbold");
-        return cheerio(slotsColumn[0]).text().trim().match(/\d+/g) + "/22";
-    };
-
     const currMap = columnMap[columns.length];
 
     const date = parseDateColumn(columns[currMap.date]);
@@ -81,6 +76,11 @@ const parseTimeColumn = (timeElement) => {
     const times = unformattedDate.split("-");
 
     return times[0].trim();
+};
+
+const parseStatusColumn = (statusElement) => {
+    const slotsColumn = cheerio(statusElement).find("p.SUGbigbold");
+    return cheerio(slotsColumn[0]).text().trim().match(/\d+/g) + "/22";
 };
 
 const loadCheerio = (html) => {
