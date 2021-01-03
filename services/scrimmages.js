@@ -1,38 +1,22 @@
-const axios = require("axios");
 const columnify = require("columnify");
 const fp = require("lodash/fp");
 const config = require("../config");
-const { parseElements, scrimmageDetails } = require("./parser");
+const scrimmageParser = require("./pageParser");
 
 /**
  * Fetches the website html and returns object with
  * details of current scrimmages
  *
- * @return {Object} - scrimmage details
+ * @return {string} - formatted scrimmage details
  */
 const fetch = async () => {
-    const { status, data } = await axios.get(config.url);
-
-    if (status !== 200) handleUnsuccessful();
+    const document = await scrimmageParser.getDomDocument(config.url);
 
     return fp.pipe(
-        parseScrimmageRows,
-        extractScrimmageDetails,
+        scrimmageParser.getScrimmagesTable,
+        scrimmageParser.extractScrimmageDetails,
         columnify
-    )(data);
-};
-
-const parseScrimmageRows = (html) =>
-    parseElements(".SUGtableouter > tbody > tr", html);
-
-const extractScrimmageDetails = (scrimmages) => {
-    return scrimmages.map((scrimmage) => {
-        return scrimmageDetails(scrimmage);
-    });
-};
-
-const handleUnsuccessful = () => {
-    throw "Unable to connect to the website.";
+    )(document);
 };
 
 module.exports = { fetch };
