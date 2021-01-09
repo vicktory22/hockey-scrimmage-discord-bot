@@ -11,7 +11,7 @@ client.on("ready", () => {
 
 client.on("message", async (msg) => {
     if (msg.channel.id != config.channel_id) return;
-    if (msg.content != "Show") return;
+    if (msg.content.toUpperCase() != "SHOW") return;
 
     try {
         const reply = await scrimmages.fetch();
