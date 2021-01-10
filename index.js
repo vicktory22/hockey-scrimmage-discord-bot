@@ -10,7 +10,7 @@ client.on("ready", () => {
 });
 
 client.on("message", async (msg) => {
-    if (msg.channel.id != config.channel_id) return;
+    if (msg.channel.id != config.channelId) return;
     if (msg.content.toUpperCase() != "SHOW") return;
 
     try {
@@ -21,4 +21,4 @@ client.on("message", async (msg) => {
     }
 });
 
-client.login(config.discord_token);
+client.login(config.discordToken);
