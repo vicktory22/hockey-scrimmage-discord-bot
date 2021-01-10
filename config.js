@@ -1,5 +1,6 @@
 module.exports = {
-    discord_token: process.env.DISCORD_TOKEN,
-    channel_id: process.env.CHANNEL_ID,
+    discordToken: process.env.DISCORD_TOKEN,
+    channelId: process.env.CHANNEL_ID,
     url: process.env.SITE_URL,
+    googleLogData: process.env.GOOGLE_LOG_DATA,
 };
