@@ -1,10 +1,22 @@
 const { JSDOM } = require("jsdom");
 
+/**
+ * Pull the html from the url and return jsdom object
+ *
+ * @param {string} url - The url we are fetching html from
+ * @return {Object} - The jsdom object
+ */
 const getDomDocument = async (url) => {
     const dom = await JSDOM.fromURL(url);
     return dom.window.document;
 };
 
+/**
+ * Parses the table htmlelement
+ *
+ * @param {Object} scrimmageTable - The jsdom htmlelement
+ * @return {array} - array of parsed scrimmages
+ */
 const extractScrimmageDetails = (scrimmageTable) => {
     const scrimmages = scrimmageTable.rows;
     const parsedScrimmages = [];
@@ -19,42 +31,40 @@ const extractScrimmageDetails = (scrimmageTable) => {
 };
 
 const parseScrimmage = (scrimmage) => {
-    let parseMap = { date: 0, time: 2, status: 3 };
-
-    if (scrimmage.childElementCount == 2) {
-        parseMap = { date: null, time: 0, status: 1 };
-    }
-
+    const columns = scrimmage.querySelectorAll("span.SUGbigbold");
     const fields = {};
 
-    fields.date = "";
-    if (parseMap.date !== null) {
-        fields.date = parseDateColumn(scrimmage.children[parseMap.date]);
+    if (scrimmage.childElementCount === 2) {
+        fields.date = null;
+        [fields.time, fields.status] = columns;
+    } else {
+        [fields.date, fields.time, fields.status] = columns;
     }
-    fields.time = parseTimeColumn(scrimmage.children[parseMap.time]);
-    fields.status = parseStatusColumn(scrimmage.children[parseMap.status]);
+
+    fields.date = parseDateString(fields.date);
+    fields.time = parseTimeString(fields.time);
+    fields.status = parseStatusString(fields.status);
 
     return fields;
 };
 
-const parseDateColumn = (column) => {
-    const date = column.children[0].innerHTML.trim();
-    const formatted = date.split(" ")[0].split("/").splice(0, 2).join("/");
-    return formatted;
+const parseDateString = (dateString) => {
+    if (dateString === null) return null;
+    return dateString.innerHTML.split(" ")[0].split("/").splice(0, 2).join("/");
 };
 
-const parseTimeColumn = (column) => {
-    const time = column.children[0].innerHTML.trim();
-    const formatted = time.split("-")[0].trim();
-    return formatted;
+const parseTimeString = (timeString) => {
+    return timeString.innerHTML.split("-")[0].trim();
 };
 
-const parseStatusColumn = (column) => {
-    const status = column
-        .getElementsByClassName("SUGbigbold hrow")[0]
-        .innerHTML.trim();
-    const formatted = status.match(/\d+/g) + "/22";
-    return formatted;
+const parseStatusString = (statusString) => {
+    const status = statusString.innerHTML.split(" ");
+
+    if (status.length > 3) {
+        return status.splice(0, 3).join(" ");
+    }
+
+    return "Filled";
 };
 
 const getScrimmagesTable = (document) =>
