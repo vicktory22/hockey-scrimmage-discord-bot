@@ -10,7 +10,7 @@ client.on("ready", () => {
 });
 
 client.on("message", async (msg) => {
-    if (msg.channel.id != config.channel_id) return;
+    if (msg.channel.id != config.channelId) return;
 
     const actionWords = ["SHOW", "SHOOT"];
     const message = msg.content.toUpperCase();
