@@ -5,6 +5,7 @@
 		"SHELL": "/usr/bin/zsh",
 	},
 	"extensions": [
-		"esbenp.prettier-vscode"
+		"esbenp.prettier-vscode",
+		"dbaeumer.vscode-eslint"
 	]
 }
