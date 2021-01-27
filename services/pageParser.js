@@ -1,4 +1,4 @@
-const { JSDOM } = require("jsdom");
+const { JSDOM } = require('jsdom');
 
 /**
  * Pull the html from the url and return jsdom object
@@ -11,27 +11,26 @@ const getDomDocument = async (url) => {
     return dom.window.document;
 };
 
-/**
- * Parses the table htmlelement
- *
- * @param {Object} scrimmageTable - The jsdom htmlelement
- * @return {array} - array of parsed scrimmages
- */
-const extractScrimmageDetails = (scrimmageTable) => {
-    const scrimmages = scrimmageTable.rows;
-    const parsedScrimmages = [];
+const parseDateString = (dateString) => {
+    if (dateString === null) return null;
+    return dateString.innerHTML.split(' ')[0].split('/').splice(0, 2).join('/');
+};
 
-    // start at 1 because first row is header
-    for (let i = 1; i < scrimmages.length; i++) {
-        const scrimmage = parseScrimmage(scrimmages[i]);
-        parsedScrimmages.push(scrimmage);
+const parseTimeString = (timeString) =>
+    timeString.innerHTML.split('-')[0].trim();
+
+const parseStatusString = (statusString) => {
+    const status = statusString.innerHTML.split(' ');
+
+    if (status.length > 3) {
+        return status.splice(0, 3).join(' ');
     }
 
-    return parsedScrimmages;
+    return 'Filled';
 };
 
 const parseScrimmage = (scrimmage) => {
-    const columns = scrimmage.querySelectorAll("span.SUGbigbold");
+    const columns = scrimmage.querySelectorAll('span.SUGbigbold');
     const fields = {};
 
     if (scrimmage.childElementCount === 2) {
@@ -48,31 +47,30 @@ const parseScrimmage = (scrimmage) => {
     return fields;
 };
 
-const parseDateString = (dateString) => {
-    if (dateString === null) return null;
-    return dateString.innerHTML.split(" ")[0].split("/").splice(0, 2).join("/");
-};
+/**
+ * Parses the table htmlelement
+ *
+ * @param {Object} scrimmageTable - The jsdom htmlelement
+ * @return {array} - array of parsed scrimmages
+ */
+const extractScrimmageDetails = (scrimmageTable) => {
+    const scrimmages = scrimmageTable.rows;
+    const parsedScrimmages = [];
 
-const parseTimeString = (timeString) => {
-    return timeString.innerHTML.split("-")[0].trim();
-};
-
-const parseStatusString = (statusString) => {
-    const status = statusString.innerHTML.split(" ");
-
-    if (status.length > 3) {
-        return status.splice(0, 3).join(" ");
+    // start at 1 because first row is header
+    for (let i = 1; i < scrimmages.length; i += 1) {
+        const scrimmage = parseScrimmage(scrimmages[i]);
+        parsedScrimmages.push(scrimmage);
     }
 
-    return "Filled";
+    return parsedScrimmages;
 };
+
+const getFirstElement = (indentifier, document) =>
+    document.getElementsByClassName(indentifier)[0];
 
 const getScrimmagesTable = (document) =>
-    getFirstElement("SUGtableouter", document);
-
-const getFirstElement = (indentifier, document) => {
-    return document.getElementsByClassName(indentifier)[0];
-};
+    getFirstElement('SUGtableouter', document);
 
 module.exports = {
     getDomDocument,
