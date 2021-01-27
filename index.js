@@ -1,23 +1,24 @@
-require("dotenv").config();
-const Discord = require("discord.js");
-const config = require("./config");
-const { handleMessage } = require("./services/messageParser");
+require('dotenv').config();
+const Discord = require('discord.js');
+const config = require('./config');
+const DiscordHandler = require('./services/DiscordHandler');
+const scraper = require('./services/scrimmages');
 
 const client = new Discord.Client();
+const discordHandler = DiscordHandler(config, scraper);
 
-client.on("ready", () => {
-    console.log(`Logged in as ${client.user.tag}!`);
+client.on('ready', () => {
+    // console.info(`Logged in as ${client.user.tag}`);
 });
 
-client.on("message", async (msg) => {
-    if (msg.channel.id != config.channelId) return;
+client.on('message', async (msg) => {
+    const channelId = msg.channel.id;
+    const message = msg.content;
 
-    const actionWords = ["SHOW", "SHOOT"];
-    const message = msg.content.toUpperCase();
+    const response = await discordHandler.onMessage(channelId, message);
 
-    if (actionWords.includes(message)) {
-        const reply = await handleMessage(message);
-        msg.reply("```" + reply + "```");
+    if (response) {
+        msg.reply(`\`\`\`${response}\`\`\``);
     }
 });
 
