@@ -1,7 +1,7 @@
-const columnify = require("columnify");
-const fp = require("lodash/fp");
-const config = require("../config");
-const scrimmageParser = require("./pageParser");
+const columnify = require('columnify');
+const fp = require('lodash/fp');
+const config = require('../config');
+const scrimmageParser = require('./pageParser');
 
 /**
  * Fetches the website html and returns object with
